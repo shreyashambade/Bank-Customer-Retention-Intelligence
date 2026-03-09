@@ -121,6 +121,16 @@ streamlit run app.py
 
 ---
 
+## Project Deliverables
+
+Exploratory Data Analysis Notebook  
+Interactive Streamlit Dashboard  
+Research Paper (EDA insights and retention recommendations)  
+Executive Summary for Stakeholders  
+
+
+---
+
 ## Live Dashboard
 
 https://bank-retention-dashboard-vnxumdgpvj2zq6frqoecbx.streamlit.app/
