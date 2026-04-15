@@ -19,12 +19,24 @@ st.set_page_config(
 # PLOTLY CHART DEFAULTS
 # ─────────────────────────────────────────
 
-COLORS = {
-    "blue":  "#2563EB",
-    "red":   "#DC2626",
-    "green": "#16A34A",
-    "amber": "#D97706",
-}
+PRIMARY_COLOR = "#3B82F6"
+
+COLOR_SET = [
+    "#3B82F6",  # blue
+    "#6366F1",  # indigo
+    "#06B6D4",  # cyan
+    "#22C55E",  # green
+    "#EF4444"   # red
+]
+
+GRADIENT_SINGLE = [
+    "#1E40AF",  # dark blue
+    "#3B82F6",  # main
+    "#60A5FA",  # medium
+    "#93C5FD",  # light
+    "#DBEAFE"   # very light
+]
+
 
 CHART_LAYOUT = dict(
     plot_bgcolor="rgba(0,0,0,0)",
@@ -65,7 +77,7 @@ df = load_data()
 # SIDEBAR
 # ─────────────────────────────────────────
 
-st.sidebar.title("Dashboard Controls")
+st.sidebar.title("⚙️ Churn Analysis Filters")
 st.sidebar.markdown("---")
 
 engagement_filter = st.sidebar.selectbox(
@@ -107,7 +119,17 @@ salary_threshold = st.sidebar.slider(
 )
 
 st.sidebar.markdown("---")
-st.sidebar.caption(f"Dataset: European Bank  |  Total records: {len(df):,}")
+st.sidebar.caption("European Bank : Customer Retention Intelligence Platform")
+
+st.sidebar.markdown("### 📌 Project Info")
+
+st.sidebar.caption("Organization")
+st.sidebar.markdown("[Unified Mentor](https://unifiedmentor.com/)")
+st.sidebar.caption("Instructor")
+st.sidebar.markdown("[Saiprasad Kagne](https://saikagne.github.io/)")
+st.sidebar.caption("Analyst")
+st.sidebar.markdown("[Shreyash Ambade](https://www.linkedin.com/in/shreyash-ambade-193a2220a/)")
+
 
 # ─────────────────────────────────────────
 # APPLY FILTERS
@@ -189,7 +211,7 @@ with col1:
         x="Status",
         y="Churn %",
         color="Status",
-        color_discrete_map={"Active": COLORS["green"], "Inactive": COLORS["red"]},
+        color_discrete_map={"Active": "#22C55E","Inactive": "#EF4444"},
         text=eng["Churn %"].map("{:.1f}%".format),
         title="Churn Rate: Active vs Inactive Members",
         labels={"Churn %": "Churn Rate (%)"}
@@ -211,7 +233,7 @@ with col2:
         y="Churn %",
         color="Status",
         barmode="group",
-        color_discrete_map={"Active": COLORS["blue"], "Inactive": COLORS["red"]},
+        color_discrete_map={"Active": "#22C55E","Inactive": "#EF4444"},
         text=geo_eng["Churn %"].map("{:.1f}%".format),
         title="Churn Rate by Region & Engagement",
         labels={"Churn %": "Churn Rate (%)"}
@@ -230,7 +252,7 @@ fig3 = px.line(
     y="Exited",
     color="Status",
     markers=True,
-    color_discrete_map={"Active": COLORS["blue"], "Inactive": COLORS["red"]},
+    color_discrete_map={"Active": "#22C55E","Inactive": "#EF4444"},
     title="Churn Rate by Age Group & Engagement Status",
     labels={"Exited": "Churn Rate", "AgeGroup": "Age Group"}
 )
@@ -271,7 +293,7 @@ with col1:
         x="Products",
         y="Churn %",
         color="Churn %",
-        color_continuous_scale=["#16A34A", "#D97706", "#DC2626"],
+        color_continuous_scale=GRADIENT_SINGLE,
         text=prod_churn["Churn %"].map("{:.1f}%".format),
         title="Churn Rate by Number of Products",
         labels={"Churn %": "Churn Rate (%)", "Products": "No. of Products"}
@@ -293,7 +315,7 @@ with col2:
         y="Count",
         color="Status",
         barmode="stack",
-        color_discrete_map={"Retained": COLORS["blue"], "Churned": COLORS["red"]},
+        color_discrete_map={"Active": "#22C55E","Inactive": "#EF4444"},
         title="Customer Volume: Retained vs Churned by Product Count",
         labels={"Count": "Number of Customers", "Products": "No. of Products"}
     )
@@ -307,7 +329,11 @@ fig6 = go.Figure(data=go.Heatmap(
     z=(geo_prod_pivot.values * 100).round(1),
     x=[f"{c} Product(s)" for c in geo_prod_pivot.columns],
     y=geo_prod_pivot.index.tolist(),
-    colorscale=[[0, "#DCFCE7"], [0.5, "#FEF9C3"], [1.0, "#FEE2E2"]],
+    colorscale=[
+    [0, "#DBEAFE"],
+    [0.3, "#93C5FD"],
+    [0.6, "#60A5FA"],
+    [1, "#1E40AF"]],
     text=np.round(geo_prod_pivot.values * 100, 1),
     texttemplate="%{text}%",
     textfont=dict(size=13),
@@ -373,10 +399,7 @@ with col1:
         x="Segment",
         y="Churn Rate",
         color="Segment",
-        color_discrete_map={
-            "High-Value Disengaged": COLORS["red"],
-            "Standard Customers":   COLORS["blue"]
-        },
+        color_discrete_map={"Active": "#22C55E","Inactive": "#EF4444"},
         text=seg_data["Churn Rate"].map("{:.1f}%".format),
         title="Churn Rate: At-Risk Segment vs Standard",
         labels={"Churn Rate": "Churn Rate (%)"}
@@ -395,7 +418,7 @@ with col2:
             names="Geography",
             values="Count",
             title="High-Value Disengaged: Geographic Distribution",
-            color_discrete_sequence=[COLORS["blue"], COLORS["amber"], COLORS["red"]]
+            color_discrete_sequence=COLOR_SET
         )
         fig8.update_traces(textinfo="label+percent")
         apply_chart_style(fig8)
@@ -451,8 +474,8 @@ with col1:
         labels={"Churn %": "Churn Rate (%)", "RelationshipScore": "Relationship Score"}
     )
     fig9.update_traces(
-        line=dict(color=COLORS["blue"], width=2.5),
-        marker=dict(size=9, color=COLORS["blue"])
+        line=dict(color=PRIMARY_COLOR, width=2.5),
+        marker=dict(size=9, color="#2F5D8C")
     )
     fig9.update_xaxes(tickmode="linear", dtick=1)
     fig9.update_yaxes(ticksuffix="%")
@@ -469,7 +492,7 @@ with col2:
         y="Count",
         color="Status",
         barmode="stack",
-        color_discrete_map={"Retained": COLORS["blue"], "Churned": COLORS["red"]},
+        color_discrete_map={"Active": "#22C55E","Inactive": "#EF4444"},
         title="Customer Distribution by Relationship Score",
         labels={"Count": "Customers", "RelationshipScore": "Relationship Score"}
     )
@@ -501,5 +524,5 @@ st.warning(
 
 st.divider()
 st.caption(
-    "Bank Customer Retention Intelligence "
+    "Bank Customer Retention Intelligence Platform"
 )
